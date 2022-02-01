@@ -4,7 +4,10 @@ Shader "Explorer/Mandelbrot"
     {
         _MainTex ("Texture", 2D) = "white" {}
         _Area ("Area", vector) = (0, 0, 4, 4)
+        _MaxIter ("MaxIter", range(4, 1000)) = 255
         _Angle ("Angle", range(-3.1415, 3.1415)) = 0
+        _Color ("Color", range(0, 1)) = .5
+        _Repeat ("Repeat", float) = 1
     }
     SubShader
     {
@@ -40,7 +43,7 @@ Shader "Explorer/Mandelbrot"
             }
 
             float4 _Area;
-            float _Angle;
+            float _Angle, _MaxIter, _Color, _Repeat;
             sampler2D _MainTex;
 
             float2 rot(float2 p, float2 pivot, float a) {
@@ -61,15 +64,29 @@ Shader "Explorer/Mandelbrot"
 
                 c = rot(c, _Area.xy, _Angle);
 
+                float r = 20; // Escape radius
+                float r2 = r * r;
+
                 float2 z;
                 float iter;
-                for (iter = 0; iter < 255; iter++) {
+                
+                for (iter = 0; iter < _MaxIter; iter++) {
                     z = float2(z.x*z.x-z.y*z.y, 2*z.x*z.y) + c;
-                    if (length(z) > 2) break;
+                    if (length(z) > r) break;
                 }
 
+                if (iter > _MaxIter) return 0;
 
-                return iter / 255;
+                float dist = length(z); // Distance from origin
+                float fracIter = (dist - r) / (r2 - r);
+
+                iter -= fracIter;
+
+                float m = sqrt(iter / _MaxIter);
+                float4 col = sin(float4(.3, .45, .65, 1) * m * 20) * .5 + .5; // Procedural colors
+                col = tex2D(_MainTex, float2(m * _Repeat, _Color));
+
+                return col;
             }
             ENDCG
         }

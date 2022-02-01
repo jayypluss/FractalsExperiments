@@ -181,7 +181,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Texture: {fileID: 0}
+  m_Texture: {fileID: 2800000, guid: b4762c38b3789419fb5866089010e902, type: 3}
   m_UVRect:
     serializedVersion: 2
     x: 0
@@ -211,6 +211,7 @@ MonoBehaviour:
   mat: {fileID: 2100000, guid: d56918f0682824df9b0c6357a479875a, type: 2}
   pos: {x: 0, y: 0}
   scale: 4
+  angle: 0
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
